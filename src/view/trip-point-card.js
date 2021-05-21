@@ -11,12 +11,12 @@ const createOffersItem = (offer) => {
   <span class="event__offer-title">${offer}</span>
   &plus;&euro;&nbsp;
   <span class="event__offer-price">${offer.price}</span>
-</li>`
-}
+</li>`;
+};
 
 const createOffersTitle = (offers) => {
   return offers.map(createOffersItem).join('');
-}
+};
 
 const tripPointTemplate = (tripInfo, destinations) => {
   const {
@@ -69,3 +69,13 @@ const tripPointTemplate = (tripInfo, destinations) => {
   </div>
 </li>`;
 };
+
+export default class TripPoint extends Abstract {
+  constructor(data){
+    super();
+    this._data = data;
+  }
+  getTemplate() {
+    return tripPointTemplate(this._data);
+  }
+}
