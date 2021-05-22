@@ -20,7 +20,7 @@ ${filter === currentFilter ? 'checked' : ''}>
 
 const createFilterList = (currentFilter) => {
   const filters = [];
-  for (const key of Filter) {
+  for (const key in Filter) {
     filters.push(createFilterItem(key, currentFilter));
   }
 
@@ -28,13 +28,10 @@ const createFilterList = (currentFilter) => {
 };
 
 const createFilterTemplate = (currentFilter) => {
-  return `<div class="trip-controls__filters">
-  <h2 class="visually-hidden">Filter events</h2>
-  <form class="trip-filters" action="#" method="get">
+  return `<form class="trip-filters" action="#" method="get">
     ${createFilterList(currentFilter)}
     <button class="visually-hidden" type="submit">Accept filter</button>
-  </form>
-</div>`;
+  </form>`;
 };
 
 export default class FilterView extends Abstract {

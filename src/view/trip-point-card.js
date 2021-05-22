@@ -1,5 +1,5 @@
 import Abstract from './abstract.js';
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 const getDestination = (destination, destinations) => {
   const index = destinations.findIndex((elem) => elem.name === destination);
@@ -8,7 +8,7 @@ const getDestination = (destination, destinations) => {
 
 const createOffersItem = (offer) => {
   return `<li class="event__offer">
-  <span class="event__offer-title">${offer}</span>
+  <span class="event__offer-title">${offer.title}</span>
   &plus;&euro;&nbsp;
   <span class="event__offer-price">${offer.price}</span>
 </li>`;
@@ -29,23 +29,25 @@ const tripPointTemplate = (tripInfo, destinations) => {
     offers,
     type,
   } = tripInfo;
+  const dayjsDayfrom = dayjs(dateFrom);
+  const dayjsDayTo = dayjs(dateTo);
+  /*   const destinationInfo = getDestination(destination, destinations); */
 
-  const destinationInfo = getDestination(destination, destinations);
-  const duration = dateTo.diff(dateFrom, 'hour');
+  const duration = dayjsDayTo.diff((dayjsDayfrom), 'hour');
 
   return `<li class="trip-events__item" data-id = "${id}">
   <div class="event">
-    <time class="event__date" datetime="${dayjs(dateFrom).format('YYYY-MM-DD')}">${dayjs(dateFrom).format('МMM DD')}</time>
+    <time class="event__date" datetime="${dayjs(dateFrom).format('YYYY-MM-DD')}">${dayjs(dateFrom).format('MMM DD')}</time>
     <div class="event__type">
-      <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+      <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
     </div>
-    <h3 class="event__title">${type}${destination}</h3>
+    <h3 class="event__title">${type} ${destination.name}</h3>
     <div class="event__schedule">
       <p class="event__time">
         <time class="event__start-time"
         datetime="${dayjs(dateFrom).format('YYYY-MM-DDTHH:mm')}">${dayjs(dateFrom).format('H:mm')}</time>
         &mdash;
-        <time class="event__end-time" datetime="${dayjs(dateTo).format('YYYY-MM-DDTHH:mm')}">11:00${dayjs(dateFrom).format('H:mm')}</time>
+        <time class="event__end-time" datetime="${dayjs(dateTo).format('YYYY-MM-DDTHH:mm')}">${dayjs(dateFrom).format('H:mm')}</time>
       </p>
       <p class="event__duration">${duration}</p>
     </div>

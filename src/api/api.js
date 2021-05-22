@@ -1,4 +1,4 @@
-
+import PointsModel from '../model/trip-points-model.js';
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
@@ -19,7 +19,8 @@ export default class Api {
 
   getPoints(){
     return this._load({url: 'points'})
-      .then(Api.getJSON);
+      .then(Api.getJSON)
+      .then((points) => points.map(PointsModel.adaptToСlient));
   }
 
   _load({
