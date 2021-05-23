@@ -21,7 +21,6 @@ export const render = (container, template, place) => {
 };
 
 export const remove = (component) => {
-  console.log(component);
   if (component === null) {
     return;
   }

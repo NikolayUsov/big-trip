@@ -1,4 +1,4 @@
-import { render, RenderPosition, replace } from '../utils/render.js';
+import { remove, render, RenderPosition, replace } from '../utils/render.js';
 import TripPointView from '../view/trip-point-card.js';
 export default class TripPointPresenter{
   constructor(container){
@@ -17,5 +17,9 @@ export default class TripPointPresenter{
     } else {
       replace(this._pointComponent, prevPointComponent);
     }
+  }
+
+  destroy(){
+    remove( this._pointComponent);
   }
 }

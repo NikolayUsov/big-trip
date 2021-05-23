@@ -1,10 +1,6 @@
 import Abstract from './abstract.js';
+import { Filter } from '../utils/const.js';
 
-const Filter = {
-  EVERYTHING: 'Everything',
-  FUTURE: 'Future',
-  PAST: 'Past',
-};
 
 const createFilterItem = (filter, currentFilter = Filter.EVERYTHING) => {
   return `<div class="trip-filters__filter">
@@ -13,7 +9,7 @@ class="trip-filters__filter-input  visually-hidden"
 type="radio"
 name="trip-filter"
 value="${filter.toLowerCase()}"
-${filter === currentFilter ? 'checked' : ''}>
+${filter === currentFilter.toUpperCase() ? 'checked' : ''}>
   <label class="trip-filters__filter-label" for="filter-${filter.toLowerCase()}">${filter}</label>
 </div>`;
 };
@@ -38,10 +34,22 @@ export default class FilterView extends Abstract {
   constructor(currentFilter) {
     super();
     this._data = currentFilter;
+    this._onFilterClickHandler =  this._onFilterClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilterTemplate(this._data);
+  }
+
+
+  _onFilterClickHandler(evt){
+    evt.preventDefault();
+    this._callback.filterClick(evt.target.value);
+  }
+
+  setFilterClickHandler(cb){
+    this._callback.filterClick = cb;
+    this.getElement().addEventListener('change', this._onFilterClickHandler);
   }
 }
 

@@ -3,7 +3,6 @@ import { SortType }  from '../utils/const.js';
 
 
 const sortItemsTemplate = (sort, currenSort) => {
-  console.log(sort === currenSort);
   return `<div class="trip-sort__item  trip-sort__item--${sort.toLowerCase()}">
 <input
 id="sort-${sort.toLowerCase()}"
