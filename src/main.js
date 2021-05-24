@@ -16,10 +16,6 @@ const pointsModel = new PointsModel();
 const tripInfoComponent = new TripInfo();
 const navigationComponent = new Navigation();
 const filterModel = new FilterModel();
-const filterPresenter = new FilterPresenter(filterContainer, filterModel);
-filterPresenter.init();
-const boardPresentor = new BoardPresenter(boardContainer, pointsModel,filterModel);
-boardPresentor.init();
 
 
 const SERVER_URL = 'https://14.ecmascript.pages.academy/big-trip';
@@ -33,6 +29,12 @@ render(navigationContainer,navigationComponent,RenderPosition.BEFOREEND);
 const successStartApp = (points) => {
   pointsModel.setPoints(UpdateType.INIT, points);
 };
+
+const filterPresenter = new FilterPresenter(filterContainer, filterModel);
+filterPresenter.init();
+
+const boardPresentor = new BoardPresenter(boardContainer, pointsModel,filterModel, api);
+boardPresentor.init();
 
 api.getPoints()
   .then(successStartApp);

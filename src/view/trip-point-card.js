@@ -18,7 +18,7 @@ const createOffersTitle = (offers) => {
   return offers.map(createOffersItem).join('');
 };
 
-const tripPointTemplate = (tripInfo, destinations) => {
+const tripPointTemplate = (tripInfo, destinationsMap, offersMap) => {
   const {
     basePrice,
     dateFrom,
@@ -76,8 +76,21 @@ export default class TripPoint extends Abstract {
   constructor(data){
     super();
     this._data = data;
+
+    this._onButtonShowEditFormHandler = this._onButtonShowEditFormHandler.bind(this);
   }
+
   getTemplate() {
-    return tripPointTemplate(this._data);
+    return tripPointTemplate(this._data, this._destinationMap, this._offersMap);
+  }
+
+  _onButtonShowEditFormHandler(evt){
+    evt.preventDefault();
+    this._callback.showEditForm();
+  }
+
+  setHandlerOnButtonShowEditForm(cb){
+    this._callback.showEditForm = cb;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._onButtonShowEditFormHandler);
   }
 }

@@ -8,12 +8,15 @@ import { sortByDay } from '../utils/sorting.js';
 
 
 export default class BoardPresenter {
-  constructor(container, pointsModel,filterModel) {
+  constructor(container, pointsModel,filterModel, api) {
     this._boardContainer = container;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
+    this._api = api;
     this._pointsContiner = null;
     this._sortComponent = null;
+    this._destinationMap = new Map();
+    this._offersMap = new Map();
     this._pointsPresenter = {};
     this._tripListContainer = new TripListContainer();
     this._currentSort = SortType.DAY;
@@ -45,6 +48,15 @@ export default class BoardPresenter {
         remove(this._loadingComponent);
         this._renderPointsContainer();
         this._renderBoard();
+        this._api.getDestination()
+          .then((destinations) => {
+            destinations.forEach((destination) => this._destinationMap.set(destination.name, destination));
+          });
+
+        this._api.getOffers()
+          .then((offers) => {
+            offers.forEach((offer) => this._offersMap.set(offer.type, offer));
+          });
         break;
       case UpdateType.MAJOR:
         this._clearPointPresenters();
@@ -64,7 +76,7 @@ export default class BoardPresenter {
   }
 
   _renderPoint(pointData){
-    const tripPoint = new TripPointPresenter(this._tripListContainer);
+    const tripPoint = new TripPointPresenter(this._tripListContainer, this._destinationMap, this._offersMap);
     tripPoint.init(pointData);
     this._pointsPresenter[pointData.id] = tripPoint;
   }
