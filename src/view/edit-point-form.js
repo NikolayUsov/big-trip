@@ -1,5 +1,6 @@
 import Smart from './smart-component';
 import dayjs from 'dayjs';
+import flatpickr from 'flatpickr';
 
 const TYPES = ['taxi', 'bus', 'train', 'ship', 'transport', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
@@ -101,7 +102,7 @@ const editPointTemplate = (point, destinationMap, offersMap) => {
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time"
+        <input class="event__input  event__input--time event__input--time-start" id="event-start-time-1" type="text" name="event-start-time"
          value="${dayjs(dateFrom).format('DD/MM/YYYY hh:mm')}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
@@ -114,7 +115,7 @@ const editPointTemplate = (point, destinationMap, offersMap) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -153,19 +154,40 @@ export default class EditPointView extends Smart {
     this._destinationMap = destinationMap;
     this._handleOnChangeType = this._handleOnChangeType.bind(this);
     this._handleOnChangeOffer = this._handleOnChangeOffer.bind(this);
+    this._handleOnChangeDestination = this._handleOnChangeDestination.bind(this);
+    this._handleOnInputPrice = this._handleOnInputPrice.bind(this);
     this.setHandlers();
+    this.setFlatPicker();
   }
 
   setHandlers() {
     this.getElement().querySelector('.event__type-list').addEventListener('change', this._handleOnChangeType);
     this.getElement().querySelector('.event__available-offers').addEventListener('change', this._handleOnChangeOffer);
+    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._handleOnChangeDestination);
+    this.getElement().querySelector('.event__input--price').addEventListener('input',  this._handleOnInputPrice);
   }
+
+  setFlatPicker(){
+    const startDateInput = this.getElement().querySelector('.event__input--time-start');
+    flatpickr(startDateInput,{});
+  }
+
   restoreHandlers(){
     this.setHandlers();
   }
 
   getTemplate(){
     return editPointTemplate(this._data, this._destinationMap, this._offersMap);
+  }
+
+  _handleOnChangeDestination(evt){
+    this.updateData(
+      Object.assign(
+        {},
+        this._data,
+        {destination: this._destinationMap.get(evt.target.value)},
+      ),
+    );
   }
 
   _handleOnChangeType(evt) {
@@ -200,6 +222,17 @@ export default class EditPointView extends Smart {
       );
     }
 
+  }
+
+  _handleOnInputPrice(evt){
+    this.updateData(
+      Object.assign(
+        {},
+        this._data,
+        {basePrice: evt.target.value},
+      ),
+      true,
+    );
   }
 
   static parseDataToState(data) {
