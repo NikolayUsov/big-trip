@@ -18,7 +18,7 @@ const createOffersTitle = (offers) => {
   return offers.map(createOffersItem).join('');
 };
 
-const tripPointTemplate = (tripInfo, destinationsMap, offersMap) => {
+const tripPointTemplate = (tripInfo) => {
   const {
     basePrice,
     dateFrom,
@@ -31,7 +31,6 @@ const tripPointTemplate = (tripInfo, destinationsMap, offersMap) => {
   } = tripInfo;
   const dayjsDayfrom = dayjs(dateFrom);
   const dayjsDayTo = dayjs(dateTo);
-  /*   const destinationInfo = getDestination(destination, destinations); */
 
   const duration = dayjsDayTo.diff((dayjsDayfrom), 'hour');
 

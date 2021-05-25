@@ -55,7 +55,7 @@ export default class BoardPresenter {
 
         this._api.getOffers()
           .then((offers) => {
-            offers.forEach((offer) => this._offersMap.set(offer.type, offer));
+            offers.forEach((offer) => this._offersMap.set(offer.type, offer.offers));
           });
         break;
       case UpdateType.MAJOR:
