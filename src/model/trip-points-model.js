@@ -16,7 +16,7 @@ export default class TripPointsModel extends Observer{
     return this._points;
   }
 
-  updatePoint(updatePoint){
+  updatePoint(updateType, updatePoint){
     const index = this._points.findIndex((point) => point.id === updatePoint.id);
     if (index === -1){
       throw new Error('Can not find element');
@@ -26,6 +26,8 @@ export default class TripPointsModel extends Observer{
       updatePoint,
       ...this._points.slice(index+1),
     ];
+
+    this._notify(updateType, updatePoint);
   }
 
   deletePoint(deletePoint){

@@ -2,8 +2,9 @@ import { remove, render, RenderPosition, replace } from '../utils/render.js';
 import TripPointView from '../view/trip-point-card.js';
 import EditPointView from '../view/edit-point-form.js';
 export default class TripPointPresenter{
-  constructor(container, destinationMap, offersMap){
+  constructor(container, handleChangePointOnView, destinationMap, offersMap){
     this._container = container;
+    this._handleChangePointView = handleChangePointOnView;
     this._pointComponent = null;
     this._pointData = null;
     this._editFormComponent = null;
@@ -35,5 +36,11 @@ export default class TripPointPresenter{
     replace(this._editFormComponent,  this._pointComponent);
   }
 
+  _handleOnSubmitEditForm(){
+    this._handleChangePointView(updateType, userAction, update)
+  }
 
+  setSubmitEditFormHandler(
+
+  )
 }

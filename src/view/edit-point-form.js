@@ -67,8 +67,8 @@ const editPointTemplate = (point, destinationMap, offersMap) => {
     type,
     isTypeChange,
   } = point;
+  console.log(dateFrom);
   const offers = isTypeChange ? [] : point.offers.slice();
-  console.log(offers);
   const allOffers = offersMap.get(type);
   const allDestinations = [...destinationMap.keys()];
   const {description, name, pictures} = destinationMap.get(destination.name);
@@ -106,7 +106,7 @@ const editPointTemplate = (point, destinationMap, offersMap) => {
          value="${dayjs(dateFrom).format('DD/MM/YYYY hh:mm')}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time"
+        <input class="event__input  event__input--time-end event__input--time" id="event-end-time-1" type="text" name="event-end-time"
         value="${dayjs(dateTo).format('DD/MM/YYYY hh:mm')}">
       </div>
 
@@ -156,28 +156,87 @@ export default class EditPointView extends Smart {
     this._handleOnChangeOffer = this._handleOnChangeOffer.bind(this);
     this._handleOnChangeDestination = this._handleOnChangeDestination.bind(this);
     this._handleOnInputPrice = this._handleOnInputPrice.bind(this);
-    this.setHandlers();
-    this.setFlatPicker();
+    this._handleOnDateFromChange = this._handleOnDateFromChange.bind(this);
+    this._handleOnDateToChange = this._handleOnDateToChange.bind(this);
+    this._handleOnSubmitEditForm = this._handleOnSubmitEditForm.bind(this);
+    this._dateFromPicker = null;
+    this._dateToPicker = null;
+    this._setHandlers();
   }
 
-  setHandlers() {
+  _setHandlers() {
     this.getElement().querySelector('.event__type-list').addEventListener('change', this._handleOnChangeType);
     this.getElement().querySelector('.event__available-offers').addEventListener('change', this._handleOnChangeOffer);
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._handleOnChangeDestination);
     this.getElement().querySelector('.event__input--price').addEventListener('input',  this._handleOnInputPrice);
+    this._setPickers();
   }
 
-  setFlatPicker(){
-    const startDateInput = this.getElement().querySelector('.event__input--time-start');
-    flatpickr(startDateInput,{});
+  _setPickers(){
+    this._setDateFromPicker();
+    this._setDateToPicker();
+  }
+
+  _setDateFromPicker(){
+    if (this._dateToPicker){
+      this._dateFromPicker.destroy();
+      this._dateFromPicker = null;
+    }
+
+    this._dateFromPicker = flatpickr(this.getElement().querySelector('.event__input--time-start'),{
+      enableTime: true,
+      dateFormat: 'Y/m/d H:i',
+      defaultDate: this._data.dateFrom,
+
+      onChange: this._handleOnDateFromChange,
+    });
+  }
+
+  _setDateToPicker(){
+    if (this._dateToPicker){
+      this._dateToPicker.destroy();
+      this._dateToPicker = null;
+    }
+
+    this._dateToPicker = flatpickr(this.getElement().querySelector('.event__input--time-end '),{
+      enableTime: true,
+      dateFormat: 'Y/m/d H:i',
+      defaultDate: this._data.dateTo,
+      minDate: this._data.dateFrom,
+
+      onChange:  this._handleOnDateToChange,
+    });
+
   }
 
   restoreHandlers(){
-    this.setHandlers();
+    this._setHandlers();
   }
 
   getTemplate(){
     return editPointTemplate(this._data, this._destinationMap, this._offersMap);
+  }
+
+  _handleOnDateFromChange(date) {
+    this.updateData(
+      Object.assign(
+        {},
+        this._data,
+        {dateFrom: dayjs(date[0]).toISOString()},
+      ),
+      true,
+    );
+  }
+
+  _handleOnDateToChange(date){
+    this.updateData(
+      Object.assign(
+        {},
+        this._data,
+        {dateTo: dayjs(date[0]).toISOString()},
+      ),
+      true,
+    );
   }
 
   _handleOnChangeDestination(evt){
@@ -233,6 +292,16 @@ export default class EditPointView extends Smart {
       ),
       true,
     );
+  }
+
+  _handleOnSubmitEditForm(evt){
+    evt.preventDefault();
+    this._callback.submitEditForm()
+  }
+
+  setSubmitEditFormHandler(cb){
+    this._callback.submitEditForm = cb;
+    this.getElement().querySelector('.event--edit').addEventListener('submit',  this._handleOnSubmitEditForm);
   }
 
   static parseDataToState(data) {

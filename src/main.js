@@ -7,6 +7,7 @@ import FilterPresenter from './presenter/filter-presenter.js';
 import { UpdateType } from './utils/const.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import  FilterModel from './model/filter-model.js';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const tripInfoContainer = document.querySelector('.trip-main');
 const navigationContainer = document.querySelector('.trip-controls__navigation');

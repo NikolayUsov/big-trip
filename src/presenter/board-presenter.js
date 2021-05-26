@@ -1,7 +1,7 @@
 import { remove, render, RenderPosition } from '../utils/render';
 import  Loading from '../view/loading-view.js';
 import Sort from '../view/sort-view.js';
-import { Filter, SortType, UpdateType, FilterFunction } from  '../utils/const.js';
+import { Filter, SortType, UpdateType, FilterFunction, UserAction } from  '../utils/const.js';
 import TripPointPresenter from './trip-pont-presenter.js';
 import TripListContainer from '../view/trip-list-container.js';
 import { sortByDay } from '../utils/sorting.js';
@@ -42,7 +42,7 @@ export default class BoardPresenter {
     return renderedPoints;
   }
 
-  _handlerFromModel(typeUpdate){
+  _handlerFromModel(typeUpdate, updatePoint){
     switch(typeUpdate){
       case UpdateType.INIT:
         remove(this._loadingComponent);
@@ -58,6 +58,9 @@ export default class BoardPresenter {
             offers.forEach((offer) => this._offersMap.set(offer.type, offer.offers));
           });
         break;
+      case UpdateType.PATH:
+        this._pointsPresenter[updatePoint.id].init(updatePoint);
+        break;
       case UpdateType.MAJOR:
         this._clearPointPresenters();
         this._renderBoard();
@@ -65,6 +68,12 @@ export default class BoardPresenter {
     }
   }
 
+  _handleFromView(updateType, userAction, update){
+    switch(userAction){
+      case UserAction.UPDATE_POIN:
+        this._pointsModel.updatePoint(updateType, update);
+    }
+  }
 
   _renderBoard() {
     this._renderSort();
@@ -76,7 +85,7 @@ export default class BoardPresenter {
   }
 
   _renderPoint(pointData){
-    const tripPoint = new TripPointPresenter(this._tripListContainer, this._destinationMap, this._offersMap);
+    const tripPoint = new TripPointPresenter(this._tripListContainer, this._handleFromView, this._destinationMap, this._offersMap);
     tripPoint.init(pointData);
     this._pointsPresenter[pointData.id] = tripPoint;
   }

@@ -7,9 +7,17 @@ module.exports = {
     path: path.resolve(__dirname, 'public'),
   },
   devtool: 'source-map',
-
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+    ],
+  },
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
     watchContentBase: true,
+    port: 9000,
   }
 };

@@ -12,6 +12,9 @@ export const UpdateType = {
   INIT: 'init',
   MAJOR: 'Major',
 };
+export const UserAction = {
+  UPDATE_POIN: 'update',
+};
 
 export const Filter = {
   EVERYTHING: 'everything',
